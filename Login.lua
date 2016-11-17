@@ -1,4 +1,4 @@
---Login.lua
+ --Login.lua
 local widget= require("widget")
 local composer = require( "composer" )
 local scene = composer.newScene()
@@ -8,6 +8,12 @@ local returnPress = function ( self,event )
            composer.gotoScene( "Front cover", "fade", 400 )
 end
 
+local function onSceneTouch1( self, event )
+	if event.phase == "began" then
+		composer.gotoScene( "Main menu", "slideLeft", 950  )
+		return true
+	end
+end           				            
 ----------------------------------------------------------------
 
 function scene:create( event )
@@ -56,9 +62,58 @@ function scene:create( event )
 	sceneGroup:insert( image2 )	sceneGroup:insert( image7 )
 	sceneGroup:insert( image3 )	sceneGroup:insert( image8 )
 	sceneGroup:insert( image4 )
-
+-- 設定image8 為確認登入按鈕
 	image8.touch = onSceneTouch1
+------------------------------------------------------------
+--插入 email、password 輸入框
+ 	 email = native.newTextField( display.contentWidth/2.2, 105, 110, 15 )
+	  
+	 email:setTextColor(  1, 1, 1  )
+	 email.hasBackground = false
+	-- email:addEventListener( "userInput", fieldHandler( function() return email end ) )
+	 password = native.newTextField( display.contentWidth/2.2, 140, 110, 15 )
+ 	
+ 	 password:setTextColor(  1, 1, 1  )
+	 password.hasBackground = false
+	 password.isSecure = true
+	-- password:addEventListener( "userInput",  fieldHandler( function() return password end ) )
 
+
+
+    sceneGroup:insert(email)
+    sceneGroup:insert(password)
+
+-------------------------------------------------------------------
+--插入選擇是否記住帳密自動登入選項按鈕
+local function onSwitchPress( event )
+    local switch = event.target
+
+    print( "Switch with ID '"..switch.id.."' is on: "..tostring(switch.isOn) )
+    auto = switch.id
+end
+-- Create two associated radio buttons (inserted into the same display group)
+local radioButton1 = widget.newSwitch(
+    {
+        left = 150,
+        top = 200,
+        style = "radio",
+        id = "Yes",
+        initialSwitchState = true,
+        onPress = onSwitchPress
+    }
+)
+sceneGroup:insert( radioButton1 )
+
+local radioButton2 = widget.newSwitch(
+    {
+        left = 230,
+        top = 200,
+        style = "radio",
+        id = "No",
+        onPress = onSwitchPress
+    }
+)
+sceneGroup:insert( radioButton2 )
 -----------------------------------------------------------------------------------	
 local returnPress = widget.newButton
  { 
@@ -77,15 +132,12 @@ end
 --------------------------------------------------------------------------------------
 function scene:show( event )
 	local phase = event.phase
-
-
-		composer.removeScene( "Front cover" )
-
-
+	composer.removeScene( "Front cover" )
 	if "did" == phase then
 		print( "1: show event, phase did" )
 		local showMem = function()
-
+	--image8按鈕事件加入監聽器 否則無法使用按鈕
+		image8:addEventListener( "touch", image8 )
 		end
 		memTimer = timer.performWithDelay( 500, showMem, 1 )
 	end	
@@ -96,7 +148,10 @@ function scene:hide( event )
 	if "will" == phase then
 	
 
+	
 		print( "1: hide event, phase will" )
+--過頁後移除image8監聽器
+	image8:removeEventListener( "touch", image8 )
 
 	end
 end
