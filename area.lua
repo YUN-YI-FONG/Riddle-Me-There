@@ -51,10 +51,6 @@ local returnPress = widget.newButton
 	returnPress.y =display.contentHeight/1.1	
 
 
-
-
-	
-
 local nextPress = widget.newButton
  { 
 	
@@ -93,15 +89,6 @@ local nextPress2 = widget.newButton
      sceneGroup:insert(nextPress2)
     nextPress2.x =display.contentWidth/1.2
 	nextPress2.y =display.contentHeight/1.2
-       
-                row:insert(rowimg)
-                row:insert(rowText)
-                row:insert(rowTitle)
-                row:insert(rowText1)
-                row:insert(rowText2)
-
-  
-	
 	
 end
 ----------------------------------------------------------------------------------------------------------
